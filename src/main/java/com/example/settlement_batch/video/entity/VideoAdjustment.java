@@ -1,6 +1,7 @@
-package com.example.settlement_batch.entity;
+package com.example.settlement_batch.video.entity;
 
 
+import com.example.settlement_batch.common.entity.BaseCreateTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -12,7 +13,8 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class VideoAdjustment {
+@Table(name = "video_adjustment")
+public class VideoAdjustment extends BaseCreateTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

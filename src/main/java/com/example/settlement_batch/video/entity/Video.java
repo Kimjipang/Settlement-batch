@@ -1,5 +1,8 @@
-package com.example.settlement_batch.entity;
+package com.example.settlement_batch.video.entity;
 
+import com.example.settlement_batch.common.entity.BaseTimeEntity;
+import com.example.settlement_batch.advertisement.entity.VideoAd;
+import com.example.settlement_batch.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -8,7 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "video")
 public class Video extends BaseTimeEntity {
 
     @Id
@@ -47,19 +52,5 @@ public class Video extends BaseTimeEntity {
         this.view_count = view_count;
         this.total_playing_time = total_playing_time;
         this.user = user;
-    }
-
-    public void update(String title, int playing_time, User user) {
-        this.title = title;
-        this.playing_time = playing_time;
-        this.user = user;
-    }
-
-    public void setPlayingTime(int playing_time) {
-        this.playing_time = playing_time;
-    }
-
-    public void increaseViewCount(int view_count) {
-        this.view_count = view_count + 1;
     }
 }

@@ -7,12 +7,14 @@ import com.example.settlement_batch.advertisement.repository.read.VideoAdReadRep
 import com.example.settlement_batch.advertisement.repository.write.AdStatisticsWriteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Transactional
 public class AdStatisticsService {
 
     private final AdStatisticsWriteRepository adStatisticsWriteRepository;
@@ -21,11 +23,11 @@ public class AdStatisticsService {
 
     public void calculateAdDailyStat() {
 
-        List<VideoAd> videoAdList = videoAdReadRepository.findAll();
+        List<VideoAd> videoAdList = videoAdReadRepository.findAllWithVideoAndUser();
 
         for (VideoAd videoAd : videoAdList) {
 
-            long user_id = videoAd.getVideo().getUser().getId(); // 광고가 붙어있는 영상의 업로더
+            long user_id = videoAd.getVideo().getUser().getId();
             int daily_ad_view = adViewReadRepository.countAllAdViewExcludingOwnerByDate(videoAd.getId(), user_id, LocalDate.now().minusDays(1));
 
             AdStatistics adStatistics = new AdStatistics(LocalDate.now(), videoAd);

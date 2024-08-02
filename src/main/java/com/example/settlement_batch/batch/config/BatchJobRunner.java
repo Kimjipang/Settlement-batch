@@ -24,34 +24,34 @@ public class BatchJobRunner {
 
     @PostConstruct
     public void runAtStartup() throws Exception {
-        System.out.println("Executing calculateDailyVideoJob at startup");
+        System.out.println("calculateDailyVideoJob 배치 작업 실행");
         JobParameters jobParameters = new JobParametersBuilder()
-                .addLong("time", System.currentTimeMillis()) // 고유한 매개변수 추가
+                .addLong("calculateDailyVideo 작업이 시작된 시간 : ", System.currentTimeMillis()) // 고유한 매개변수 추가
                 .toJobParameters();
         jobLauncher.run(calculateDailyVideo, jobParameters);
 
-        System.out.println("Executing calculateDailyAdvertisementJob at startup");
+        System.out.println("calculateDailyAdvertisementJob 배치 작업 실행");
         jobParameters = new JobParametersBuilder()
-                .addLong("time", System.currentTimeMillis()) // 고유한 매개변수 추가
+                .addLong("calculateDailyAdvertisementJob 작업이 시작된 시간 : ", System.currentTimeMillis()) // 고유한 매개변수 추가
                 .toJobParameters();
         jobLauncher.run(calculateDailyAdvertisement, jobParameters);
     }
 
-    @Scheduled(cron = "0 0 * * * ?") //
-    public void runCalculateDailyVideoJob() throws Exception {
-        System.out.println("Executing calculateDailyVideoJob");
-        JobParameters jobParameters = new JobParametersBuilder()
-                .addLong("time", System.currentTimeMillis()) // 고유한 매개변수 추가
-                .toJobParameters();
-        jobLauncher.run(calculateDailyVideo, jobParameters);
-    }
-
-    @Scheduled(cron = "0 0 * * * ?") //
-    public void runCalculateDailyAdJob() throws Exception {
-        System.out.println("Executing calculateDailyAdvertisementJob");
-        JobParameters jobParameters = new JobParametersBuilder()
-                .addLong("time", System.currentTimeMillis()) // 고유한 매개변수 추가
-                .toJobParameters();
-        jobLauncher.run(calculateDailyAdvertisement, jobParameters);
-    }
+//    @Scheduled(cron = "0 0 * * * ?") //
+//    public void runCalculateDailyVideoJob() throws Exception {
+//        System.out.println("Executing calculateDailyVideoJob");
+//        JobParameters jobParameters = new JobParametersBuilder()
+//                .addLong("time", System.currentTimeMillis()) // 고유한 매개변수 추가
+//                .toJobParameters();
+//        jobLauncher.run(calculateDailyVideo, jobParameters);
+//    }
+//
+//    @Scheduled(cron = "0 0 * * * ?") //
+//    public void runCalculateDailyAdJob() throws Exception {
+//        System.out.println("Executing calculateDailyAdvertisementJob");
+//        JobParameters jobParameters = new JobParametersBuilder()
+//                .addLong("time", System.currentTimeMillis()) // 고유한 매개변수 추가
+//                .toJobParameters();
+//        jobLauncher.run(calculateDailyAdvertisement, jobParameters);
+//    }
 }

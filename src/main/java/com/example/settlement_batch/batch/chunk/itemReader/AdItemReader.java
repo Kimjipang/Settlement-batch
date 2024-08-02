@@ -1,4 +1,4 @@
-package com.example.settlement_batch.batch.chunk;
+package com.example.settlement_batch.batch.chunk.itemReader;
 
 import com.example.settlement_batch.advertisement.entity.VideoAd;
 import com.example.settlement_batch.advertisement.repository.read.VideoAdReadRepository;

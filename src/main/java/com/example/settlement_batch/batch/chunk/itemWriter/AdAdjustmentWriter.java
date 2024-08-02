@@ -1,4 +1,4 @@
-package com.example.settlement_batch.batch.chunk;
+package com.example.settlement_batch.batch.chunk.itemWriter;
 
 
 import com.example.settlement_batch.advertisement.entity.AdAdjustment;

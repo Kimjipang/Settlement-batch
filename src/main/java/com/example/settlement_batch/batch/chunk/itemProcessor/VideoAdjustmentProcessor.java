@@ -1,4 +1,4 @@
-package com.example.settlement_batch.batch.chunk;
+package com.example.settlement_batch.batch.chunk.itemProcessor;
 
 import com.example.settlement_batch.common.service.CalculateDailyView;
 import com.example.settlement_batch.video.entity.Video;
@@ -21,8 +21,10 @@ public class VideoAdjustmentProcessor implements ItemProcessor<Video, VideoAdjus
     @Override
     public VideoAdjustment process(Video video) throws Exception {
         int accumulateView = video.getView_count();
-        Integer getTodayView = videoStatisticsReadRepository.getDailyVideoView(video.getId(), LocalDate.now().minusDays(1));
+        Integer getTodayView = videoStatisticsReadRepository.getDailyVideoView(video.getId(), LocalDate.now());
         int todayView = getTodayView == null ? 0 : getTodayView;
+
+
 
         BigDecimal videoDailyAmount = calculateDailyView.calculateDailyAmount(
                 accumulateView,

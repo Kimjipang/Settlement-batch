@@ -1,4 +1,4 @@
-package com.example.settlement_batch.batch.chunk;
+package com.example.settlement_batch.batch.chunk.itemProcessor;
 
 import com.example.settlement_batch.advertisement.entity.AdAdjustment;
 import com.example.settlement_batch.advertisement.entity.VideoAd;
@@ -21,7 +21,8 @@ public class AdAdjustmentProcessor implements ItemProcessor<VideoAd, AdAdjustmen
     @Override
     public AdAdjustment process(VideoAd videoAd) throws Exception {
         int accumulateView = videoAd.getView_count();
-        int todayView = adStatisticsReadRepository.getDailyAdView(videoAd.getId(), LocalDate.now().minusDays(1));
+        Integer getTodayView = adStatisticsReadRepository.getDailyAdView(videoAd.getId(), LocalDate.now());
+        int todayView = getTodayView == null ? 0 : getTodayView;
 
         BigDecimal adDailyAmount = calculateDailyView.calculateDailyAmount(
                 accumulateView,

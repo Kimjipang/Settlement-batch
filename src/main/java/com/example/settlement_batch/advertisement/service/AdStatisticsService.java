@@ -28,7 +28,7 @@ public class AdStatisticsService {
         for (VideoAd videoAd : videoAdList) {
 
             long user_id = videoAd.getVideo().getUser().getId();
-            int daily_ad_view = adViewReadRepository.countAllAdViewExcludingOwnerByDate(videoAd.getId(), user_id, LocalDate.now().minusDays(1));
+            int daily_ad_view = adViewReadRepository.countAllAdViewExcludingOwnerByDate(videoAd.getId(), user_id, LocalDate.now());
 
             AdStatistics adStatistics = new AdStatistics(LocalDate.now(), videoAd);
 

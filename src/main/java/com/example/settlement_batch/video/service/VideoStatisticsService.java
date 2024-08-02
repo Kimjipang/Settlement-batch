@@ -25,8 +25,7 @@ public class VideoStatisticsService {
         List<Video> videoList = videoReadRepository.findAll();
 
         for(Video video : videoList) {
-
-            int daily_video_view = videoViewReadRepository.countAllVideoViewExcludingVideoOwner(video.getId(), video.getUser().getId(), LocalDate.now().minusDays(1));
+            int daily_video_view = videoViewReadRepository.countAllVideoViewExcludingVideoOwner(video.getId(), video.getUser().getId(), LocalDate.now());
 
             VideoStatistics videoStatistics = new VideoStatistics(
                     LocalDate.now(),

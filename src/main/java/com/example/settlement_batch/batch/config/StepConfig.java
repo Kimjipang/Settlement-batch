@@ -27,7 +27,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 
 
@@ -36,40 +35,26 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Slf4j
 public class StepConfig {
 
-    @Autowired
-    private JobRepository jobRepository;
-    @Autowired
-    private PlatformTransactionManager transactionManager;
-    @Autowired
-    private JpaItemWriter<VideoStatistics> videoStatisticsJpaItemWriter;
-    @Autowired
-    private VideoAdjustmentProcessor videoAdjustmentProcessor;
-    @Autowired
-    private VideoStatisticsProcessor videoStatisticsProcessor;
-    @Autowired
-    private VideoAdjustmentWriter videoAdjustmentWriter;
-    @Autowired
-    private AdStatisticsTasklet adStatisticsTasklet;
-    @Autowired
-    private AdItemReader adItemReader;
-    @Autowired
-    private AdAdjustmentProcessor adAdjustmentProcessor;
-    @Autowired
-    private AdAdjustmentWriter adAdjustmentWriter;
-    @Autowired
-    private StepTimeListener stepTimeListener;
-    @Autowired
-    private JpaPagingItemReader<Video> jpaPagingItemReader;
-    @Autowired
-    private VideoItemReadListener videoItemReadListener;
-    @Autowired
-    private StepExceptionListener stepExceptionListener;
-    @Autowired
-    private TaskExecutorConfig taskExecutorConfig;
-
-    @Bean
+    @Bean(name = "calculateVideoStat")
     @JobScope
-    public Step calculateVideoStat() {
+    public Step calculateVideoStat(
+            JobRepository jobRepository,
+            PlatformTransactionManager transactionManager,
+            JpaItemWriter<VideoStatistics> videoStatisticsJpaItemWriter,
+            VideoStatisticsProcessor videoStatisticsProcessor,
+            JpaPagingItemReader<Video> jpaPagingItemReader,
+            VideoItemReadListener videoItemReadListener,
+            StepTimeListener stepTimeListener,
+            StepExceptionListener stepExceptionListener,
+            @Qualifier("batchTaskExecutor") TaskExecutor taskExecutor) {
+
+        log.info("Creating Step: calculateVideoStat");
+        if (log.isInfoEnabled()) {
+            log.info("Using Reader: {}", jpaPagingItemReader.getClass().getName());
+            log.info("Using Processor: {}", videoStatisticsProcessor.getClass().getName());
+            log.info("Using Writer: {}", videoStatisticsJpaItemWriter.getClass().getName());
+        }
+
         return new StepBuilder("calculateVideoStat", jobRepository)
                 .<Video, VideoStatistics>chunk(10, transactionManager)
                 .listener(stepTimeListener)
@@ -78,40 +63,61 @@ public class StepConfig {
                 .writer(videoStatisticsJpaItemWriter)
                 .listener(videoItemReadListener)
                 .listener(stepExceptionListener)
-                .taskExecutor(taskExecutorConfig.taskExecutor())
+                .taskExecutor(taskExecutor)
                 .build();
     }
 
-    @Bean
-    public Step calculateVideoAdjustment() {
+    @Bean(name = "calculateVideoAdjustment")
+    public Step calculateVideoAdjustment(
+            JobRepository jobRepository,
+            PlatformTransactionManager transactionManager,
+            VideoAdjustmentProcessor videoAdjustmentProcessor,
+            JpaPagingItemReader<Video> jpaPagingItemReader,
+            VideoAdjustmentWriter videoAdjustmentWriter,
+            StepTimeListener stepTimeListener,
+            @Qualifier("batchTaskExecutor") TaskExecutor taskExecutor) {
+
         return new StepBuilder("calculateVideoAdjustment", jobRepository)
                 .<Video, VideoAdjustment>chunk(10, transactionManager)
                 .listener(stepTimeListener)
                 .reader(jpaPagingItemReader)
                 .processor(videoAdjustmentProcessor)
                 .writer(videoAdjustmentWriter)
-//                .taskExecutor(taskExecutor())
+//                .taskExecutor(taskExecutor)
                 .build();
-
     }
 
-    @Bean
-    public Step calculateAdStat() {
+    @Bean(name = "calculateAdStat")
+    public Step calculateAdStat(
+            JobRepository jobRepository,
+            PlatformTransactionManager transactionManager,
+            AdStatisticsTasklet adStatisticsTasklet,
+            StepTimeListener stepTimeListener) {
+
         return new StepBuilder("calculateAdStat", jobRepository)
                 .listener(stepTimeListener)
                 .tasklet(adStatisticsTasklet, transactionManager)
                 .build();
     }
 
-    @Bean
-    public Step calculateAdAdjustment() {
+    @Bean(name = "calculateAdAdjustment")
+    public Step calculateAdAdjustment(
+            JobRepository jobRepository,
+            PlatformTransactionManager transactionManager,
+            AdItemReader adItemReader,
+            AdAdjustmentProcessor adAdjustmentProcessor,
+            AdAdjustmentWriter adAdjustmentWriter,
+            StepTimeListener stepTimeListener,
+            @Qualifier("batchTaskExecutor") TaskExecutor taskExecutor
+    ) {
+
         return new StepBuilder("calculateAdAdjustment", jobRepository)
                 .<VideoAd, AdAdjustment>chunk(10, transactionManager)
                 .listener(stepTimeListener)
                 .reader(adItemReader)
                 .processor(adAdjustmentProcessor)
                 .writer(adAdjustmentWriter)
-//                .taskExecutor(taskExecutor())
+//                .taskExecutor(taskExecutor)
                 .build();
     }
 

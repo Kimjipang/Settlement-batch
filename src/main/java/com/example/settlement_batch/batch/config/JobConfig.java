@@ -8,31 +8,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.task.TaskExecutor;
 
 @Configuration
 public class JobConfig {
 
-    @Autowired
-    private StepConfig stepConfig;
-
-
     @Bean
-    public Job calculateDailyVideo(JobRepository jobRepository) {
+    public Job calculateDailyVideo(JobRepository jobRepository,
+                                   @Qualifier("calculateVideoStat") Step calculateVideoStat,
+                                   @Qualifier("calculateVideoAdjustment") Step calculateVideoAdjustment
+                                   ) {
         return new JobBuilder("calculateDailyVideo", jobRepository)
                 .preventRestart()
-                .start(stepConfig.calculateVideoStat())
-                .next(stepConfig.calculateVideoAdjustment())
+                .start(calculateVideoStat)
+                .next(calculateVideoAdjustment)
                 .build();
 
     }
 
     @Bean
-    public Job calculateDailyAdvertisement(JobRepository jobRepository) {
+    public Job calculateDailyAdvertisement(JobRepository jobRepository,
+                                           @Qualifier("calculateAdStat") Step calculateAdStat,
+                                           @Qualifier("calculateAdAdjustment") Step calculateAdAdjustment
+                                           ) {
         return new JobBuilder("calculateDailyAdvertisement", jobRepository)
                 .preventRestart()
-                .start(stepConfig.calculateAdStat())
-                .next(stepConfig.calculateAdAdjustment())
+                .start(calculateAdStat)
+                .next(calculateAdAdjustment)
                 .build();
     }
 

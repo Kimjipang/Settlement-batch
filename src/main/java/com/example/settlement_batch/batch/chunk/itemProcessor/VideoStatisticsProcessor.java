@@ -7,15 +7,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 
 @Component
 @Slf4j
 @RequiredArgsConstructor
-//@Transactional 이거 없애서 되는지 보자구
 public class VideoStatisticsProcessor implements ItemProcessor<Video, VideoStatistics> {
 
     private final VideoViewReadRepository videoViewReadRepository;
@@ -24,10 +20,8 @@ public class VideoStatisticsProcessor implements ItemProcessor<Video, VideoStati
     @Override
     public VideoStatistics process(Video video) throws Exception {
 
-        log.info("처리해야 할 동영상의 ID : {}", video.getId());
         try {
             int daily_video_view = videoViewReadRepository.countAllVideoViewExcludingVideoOwner(video.getId(), video.getUser().getId(), LocalDate.now());
-            System.out.println("Repsotiroy 끝");
 
             return new VideoStatistics(
                     LocalDate.now(),

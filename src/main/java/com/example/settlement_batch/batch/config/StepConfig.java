@@ -83,7 +83,7 @@ public class StepConfig {
                 .reader(jpaPagingItemReader)
                 .processor(videoAdjustmentProcessor)
                 .writer(videoAdjustmentWriter)
-//                .taskExecutor(taskExecutor)
+                .taskExecutor(taskExecutor)
                 .build();
     }
 
@@ -117,34 +117,8 @@ public class StepConfig {
                 .reader(adItemReader)
                 .processor(adAdjustmentProcessor)
                 .writer(adAdjustmentWriter)
-//                .taskExecutor(taskExecutor)
+                .taskExecutor(taskExecutor)
                 .build();
     }
-
-//    @Bean(name = "batchTaskExecutor")
-//    public TaskExecutor taskExecutor() {
-//        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-//        executor.setCorePoolSize(4);
-//        executor.setMaxPoolSize(4);
-//        executor.setQueueCapacity(25);
-//        executor.setThreadNamePrefix("batchTaskExecutor-");
-//        executor.initialize();
-//
-//
-//        new Thread(() -> {
-//            while (true) {
-//                log.info("Active Threads: {}", executor.getActiveCount());
-//                log.info("Pool Size: {}", executor.getPoolSize());
-//                log.info("Queue Size: {}", executor.getThreadPoolExecutor().getQueue().size());
-//                try {
-//                    Thread.sleep(30000);
-//                } catch (InterruptedException e) {
-//                    Thread.currentThread().interrupt();
-//                    break;
-//                }
-//            }
-//        }).start();
-//        return executor;
-//    }
 
 }

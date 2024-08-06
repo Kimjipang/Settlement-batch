@@ -32,6 +32,7 @@ public class TaskExecutorConfig {
                 }
             }
         }).start();
+
         return executor;
     }
 }

@@ -17,9 +17,8 @@ public class VideoItemReadListener implements ItemReadListener<Video> {
     @Override
     public void afterRead(Video video) {
         // 데이터 읽은 후에 호출됩니다.
-        if (video.getId() < 1 && video.getId() > 4000) {
-            log.info("Thread: {}, 동영상의 id : {}", Thread.currentThread().getName(), video.getId());
-        }
+        log.info("Thread: {}, 동영상의 id : {}", Thread.currentThread().getName(), video.getId());
+
     }
 
     @Override
